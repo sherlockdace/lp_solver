@@ -1,0 +1,13 @@
+absl-py==2.2.1
+chex==0.1.89
+jax==0.5.3
+jaxlib==0.5.3
+ml_dtypes==0.5.1
+numpy==2.2.4
+opt_einsum==3.4.0
+pip==25.0
+scipy==1.15.2
+setuptools==75.8.0
+toolz==1.0.0
+typing_extensions==4.13.0
+wheel==0.45.1
