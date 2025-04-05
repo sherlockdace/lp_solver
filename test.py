@@ -5,17 +5,20 @@ import jax.numpy as jnp
 import scipy
 import scipy.optimize
 
-from lp_solver.pdhg.standard_pdhg import standard_pdhg_solve
-from lp_solver.extragradient.standard_extragradient import standard_extragradient_solve
-from lp_solver.eag.eag_c import eag_c_solve
+from lp_solver import (
+    standard_pdhg_solve,
+    standard_extragradient_solve,
+    eag_c_solve,
+    g_eag_solve,
+)
 
 jax.config.update("jax_enable_x64", True)
 
-m = 10
-n = 50
+m = 50
+n = 100
 mat_A = jax.random.normal(jax.random.PRNGKey(1), (m, n))
 vec_b = jax.random.normal(jax.random.PRNGKey(1), (m,))
-vec_c = jax.random.normal(jax.random.PRNGKey(1), (n,)) / n + 100
+vec_c = jax.random.normal(jax.random.PRNGKey(1), (n,)) / n + 5
 
 tic = time()
 state = standard_pdhg_solve(
@@ -23,11 +26,14 @@ state = standard_pdhg_solve(
     mat_A=mat_A,
     vec_b=vec_b,
     dtype=jnp.float64,
-    tol=1e-8,
-    max_iter=10000,
+    tol=1e-4,
+    max_iter=50000,
 )
 toc = time()
-print(f"PDHG: Time taken: {toc - tic:.4f} seconds, current iter: {state.curr_iter}", end="\t")
+print(
+    f"PDHG: Time taken: {toc - tic:.4f} seconds, current iter: {state.curr_iter}",
+    end="\t",
+)
 print(f"The optimal value is: {jnp.vdot(state.vec_c, state.vec_x)}")
 
 tic = time()
@@ -36,11 +42,14 @@ state = standard_extragradient_solve(
     mat_A=mat_A,
     vec_b=vec_b,
     dtype=jnp.float64,
-    tol=1e-8,
-    max_iter=10000,
+            tol=1e-4,
+    max_iter=50000,
 )
 toc = time()
-print(f"EG: Time taken: {toc - tic:.4f} seconds, current iter: {state.curr_iter}", end="\t")
+print(
+    f"EG: Time taken: {toc - tic:.4f} seconds, current iter: {state.curr_iter}",
+    end="\t",
+)
 print(f"The optimal value is: {jnp.vdot(state.vec_c, state.vec_x)}")
 
 tic = time()
@@ -49,11 +58,30 @@ state = eag_c_solve(
     mat_A=mat_A,
     vec_b=vec_b,
     dtype=jnp.float64,
-    tol=1e-8,
-    max_iter=10000,
+    tol=1e-4,
+    max_iter=50000,
 )
 toc = time()
-print(f"EAGC: Time taken: {toc - tic:.4f} seconds, current iter: {state.curr_iter}", end="\t")
+print(
+    f"EAGC: Time taken: {toc - tic:.4f} seconds, current iter: {state.curr_iter}",
+    end="\t",
+)
+print(f"The optimal value is: {jnp.vdot(state.vec_c, state.vec_x)}")
+
+tic = time()
+state = g_eag_solve(
+    vec_c=vec_c,
+    mat_A=mat_A,
+    vec_b=vec_b,
+    dtype=jnp.float64,
+    tol=1e-4,
+    max_iter=50000,
+)
+toc = time()
+print(
+    f"G_EAG: Time taken: {toc - tic:.4f} seconds, current iter: {state.curr_iter}",
+    end="\t",
+)
 print(f"The optimal value is: {jnp.vdot(state.vec_c, state.vec_x)}")
 
 tic = time()
