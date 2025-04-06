@@ -5,6 +5,7 @@ from lp_solver.primal_dual.extragradient.standard_extragradient import (
 )
 from lp_solver.primal_dual.eag.eag_c import eag_c_solve
 from lp_solver.primal_dual.eag.g_eag import g_eag_solve
+from lp_solver.primal_dual.aeg.aeg import aeg_solve
 
 __all__ = [
     "StandardLPState",
@@ -12,4 +13,5 @@ __all__ = [
     "standard_extragradient_solve",
     "eag_c_solve",
     "g_eag_solve",
+    "aeg_solve",
 ]
